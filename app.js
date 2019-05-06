@@ -8,6 +8,15 @@ var https = require('https');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+import passport from 'passport';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+
+// Other configuration modules
+import configurePassport from './config/passport';
+import configureRoutes from './routes/index';
+
+const shouldConfigureLocal = process.env.NODE_ENV === 'development';
 
 var app = express();
 
@@ -17,12 +26,33 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+// Parses payload bodies in requests so it is easier to work with
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Parses requests cookies. This is needed to get the user session cookie
+app.use(cookieParser());
+
+// Creates user session cookies that allows users to navigate between protected routes without
+// having to log in every time
+app.use(session({
+secret: 'keyboard cat',
+resave: false,
+saveUninitialized: true,
+}));
+
+// Configure passport with SAML strategy
+configurePassport(passport, false);
+
+// Initialize passport and passport sessions
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// Add routes to app
+app.use(configureRoutes(passport));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
