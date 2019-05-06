@@ -8,8 +8,8 @@ var app = require('../app');
 var debug = require('debug')('myapp:server');
 var https = require('https');
 var fs = require('fs');
-var privateKey = fs.readFileSync('../myapp/models/private.pem', 'utf8');
-var certificate = fs.readFileSync('public/file.crt', 'utf8')
+var privateKey = fs.readFileSync('./public/private.pem', 'utf8');
+var certificate = fs.readFileSync('./public/file.crt', 'utf8')
 var credentials = {
   key: privateKey,
   cert: certificate

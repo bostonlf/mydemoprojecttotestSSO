@@ -4,7 +4,7 @@ var SAML = require('passport-saml');
 var User = require('../models/User');
 
 // Read the
-const certPath = path.resolve(process.cwd(), '../myapp/models/private.pem');
+const certPath = path.resolve(process.cwd(), './config/w3id.alpha.sso.ibm.com.pem');
 const cert = fs.readFileSync(certPath, 'utf-8');
 
 const SAML_BLUEMIX_CONFIG = {

@@ -27,6 +27,12 @@ function configureRoutes(passport) {
     response.render('index', { user: request.user });
   });
 
+  router.get('/lftest', (request, response) => {
+    response.send(process.env.NODE_ENV+"@@");
+  });
+
+ 
+
   // This route redirects the user to the IDP (w3id SSO) log in page.
   router.get('/login', passport.authenticate('saml'));
   
